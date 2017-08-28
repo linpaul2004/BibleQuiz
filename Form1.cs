@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace BibleQuiz
 {
@@ -197,21 +198,27 @@ namespace BibleQuiz
 		int[] button_category;
 		int[] button_index;
 		int[] nowused;
+		const int spacing = 40;
 		public Form1()
 		{
 			InitializeComponent();
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					buttons[i * 3 + j] = new Button();
+				}
+			}
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			int spacing = 40;
 			int w = (this.Width - spacing * 4) / 3;
 			int h = (this.Height - spacing * 4) / 3;
 			for (int i = 0; i < 3; i++)
 			{
 				for (int j = 0; j < 3; j++)
 				{
-					buttons[i * 3 + j] = new Button();
 					buttons[i * 3 + j].Left = spacing * (j + 1) + w * j;
 					buttons[i * 3 + j].Top = spacing * (i + 1) + h * i;
 					buttons[i * 3 + j].Width = w;
@@ -243,14 +250,13 @@ namespace BibleQuiz
 			button_category = Enumerable.Repeat(0, 9).ToArray();
 			button_index = Enumerable.Repeat(0, 9).ToArray();
 			//nowused = Enumerable.Repeat(-1, question.GetLength(0)).ToArray();
-			refill();
+			refill(-1);
 		}
 
 		private void setColor()
 		{
 			foreach(Button b in buttons)
 			{
-				Console.WriteLine(b.Enabled);
 				if (b.Enabled==false)
 				{
 					b.BackColor = DefaultBackColor;
@@ -266,59 +272,115 @@ namespace BibleQuiz
 			nextButton.BackColor = Color.FromArgb(60, r.Next(256), r.Next(256), r.Next(256));
 		}
 
-		private void refill()
+		private void refill(int press)
 		{
 			int cindex = 0;
 			nowused = Enumerable.Repeat(-1, 9).ToArray();
-			for (int i = 0; i < 9; i++)
-			{
-				buttons[i].Enabled = true;
-			}
 			if (restCategory >= 9)
 			{
-				for (int i = 0; i < 9; i++)
+				if (press < 0)
 				{
-					if (nowused.Contains(cindex) || question_index[cindex] == answer[cindex].Length - 1)
+					for (int i = 0; i < 9; i++)
 					{
-						cindex++;
-						i--;
-						continue;
-					}
-					else
-					{
-						button_category[i] = cindex;
-						button_index[i] = ++question_index[cindex];
-						buttons[i].Text = category[cindex] + "\n" + star_str[star[cindex][button_index[i]]];
-						nowused[i] = cindex;
-						cindex++;
-					}
-				}
-			}
-			else
-			{
-				for (int i = 0; i < 9; i++)
-				{
-					if (cindex == question.Length)
-					{
-						buttons[i].Text = "";
-						buttons[i].Enabled = false;
-					}
-					else
-					{
-						if (question_index[cindex] != answer[cindex].Length - 1)
-						{
-							button_category[i] = cindex;
-							button_index[i] = ++question_index[cindex];
-							buttons[i].Text = category[cindex] + "\n" + star_str[star[cindex][button_index[i]]];
-						}
-						else
+						if (nowused.Contains(cindex) || question_index[cindex] == answer[cindex].Length - 1)
 						{
 							cindex++;
 							i--;
 							continue;
 						}
+						else
+						{
+							button_category[i] = cindex;
+							button_index[i] = ++question_index[cindex];
+							buttons[i].Text = category[cindex] + "\n" + star_str[star[cindex][button_index[i]]];
+							nowused[i] = cindex;
+							cindex++;
+						}
 					}
+				}
+				else
+				{
+					buttons[press].Text = "";
+					buttons[press].Enabled = false;
+					if (question_index[button_category[press]] == answer[button_category[press]].Length - 1)
+					{
+						for(int i = 0; i < 9; i++)
+						{
+							nowused[i] = button_category[i];
+						}
+						for(int i = 0; i < question.Length; i++)
+						{
+							if (nowused.Contains(i) == false && question_index[i] != answer[i].Length - 1)
+							{
+								button_category[press] = i;
+								button_index[press] = ++question_index[i];
+								buttons[press].Text = category[i] + "\n" + star_str[star[i][button_index[press]]];
+								buttons[press].Enabled = true;
+								break;
+							}
+						}
+					}
+					else
+					{
+						button_index[press] = ++question_index[button_category[press]];
+						buttons[press].Text = category[button_category[press]] + "\n" + star_str[star[button_category[press]][button_index[press]]];
+						buttons[press].Enabled = true;
+					}
+				}
+			}
+			else
+			{
+				if (press < 0)
+				{
+					for (int i = 0; i < 9; i++)
+					{
+						if (cindex == question.Length)
+						{
+							buttons[i].Text = "";
+							buttons[i].Enabled = false;
+						}
+						else
+						{
+							if (question_index[cindex] != answer[cindex].Length - 1)
+							{
+								button_category[i] = cindex;
+								button_index[i] = ++question_index[cindex];
+								buttons[i].Text = category[cindex] + "\n" + star_str[star[cindex][button_index[i]]];
+							}
+							else
+							{
+								cindex++;
+								i--;
+								continue;
+							}
+						}
+					}
+				}
+				else
+				{
+					buttons[press].Text = "";
+					buttons[press].Enabled = false;
+					if (question_index[button_category[press]] == answer[button_category[press]].Length - 1)
+					{
+						for (int i = 0; i < question.Length; i++)
+						{
+							if (question_index[i] != answer[i].Length - 1)
+							{
+								button_category[press] = i;
+								button_index[press] = ++question_index[i];
+								buttons[press].Enabled = true;
+								buttons[press].Text = category[i] + "\n" + star_str[star[i][button_index[press]]];
+								break;
+							}
+						}
+					}
+					else
+					{
+						button_index[press] = ++question_index[button_category[press]];
+						buttons[press].Enabled = true;
+						buttons[press].Text = category[button_category[press]] + "\n" + star_str[star[button_category[press]][button_index[press]]];
 
+					}
 				}
 			}
 			setColor();
@@ -379,14 +441,34 @@ namespace BibleQuiz
 				label_answer.Visible = false;
 				nextButton.Visible = false;
 				setColor();
-				for (int i = 0; i < 9; i++)
+				refill(press);
+			}
+		}
+
+		private void Form1_Resize(object sender, EventArgs e)
+		{
+			if (this.WindowState == FormWindowState.Maximized)
+			{
+				int w = (this.Width - spacing * 4) / 3;
+				int h = (this.Height - spacing * 4) / 3;
+				for (int i = 0; i < 3; i++)
 				{
-					if (buttons[i].Enabled == true)
+					for (int j = 0; j < 3; j++)
 					{
-						return;
+						buttons[i * 3 + j].Left = spacing * (j + 1) + w * j;
+						buttons[i * 3 + j].Top = spacing * (i + 1) + h * i;
+						buttons[i * 3 + j].Width = w;
+						buttons[i * 3 + j].Height = h;
 					}
 				}
-				refill();
+				label_question.Top = 10;
+				label_question.Height = (this.Height - spacing * 4) / 3;
+				label_option.Top = (this.Height - spacing * 4) / 3 + 80;
+				label_option.Height = (this.Height - spacing * 4) / 2;
+				label_answer.Left = label_option.Left + label_option.Width / 2;
+				label_answer.Top = label_option.Top;
+				label_answer.Width = label_option.Width / 2;
+				label_answer.Height = label_option.Height;
 			}
 		}
 	}
