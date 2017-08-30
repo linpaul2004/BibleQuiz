@@ -28,22 +28,11 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.label_question = new System.Windows.Forms.Label();
 			this.label_option = new System.Windows.Forms.Label();
 			this.nextButton = new System.Windows.Forms.Button();
 			this.label_answer = new System.Windows.Forms.Label();
+			this.label_question = new System.Windows.Forms.Label();
 			this.SuspendLayout();
-			// 
-			// label_question
-			// 
-			this.label_question.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-			this.label_question.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.label_question.Location = new System.Drawing.Point(13, 13);
-			this.label_question.Name = "label_question";
-			this.label_question.Size = new System.Drawing.Size(504, 124);
-			this.label_question.TabIndex = 0;
-			this.label_question.Text = "label1";
-			this.label_question.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// label_option
 			// 
@@ -81,6 +70,17 @@
 			this.label_answer.Text = "答案：";
 			this.label_answer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
+			// label_question
+			// 
+			this.label_question.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.label_question.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.label_question.Location = new System.Drawing.Point(13, 13);
+			this.label_question.Name = "label_question";
+			this.label_question.Size = new System.Drawing.Size(503, 124);
+			this.label_question.TabIndex = 0;
+			this.label_question.Text = "label1";
+			this.label_question.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -103,11 +103,10 @@
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Label label_question;
 		private System.Windows.Forms.Label label_option;
 		private System.Windows.Forms.Button nextButton;
 		private System.Windows.Forms.Label label_answer;
+		private System.Windows.Forms.Label label_question;
 	}
 }
 
