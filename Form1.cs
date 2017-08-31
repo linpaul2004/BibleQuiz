@@ -99,7 +99,7 @@ namespace BibleQuiz
 			//卡通
 			new string[]{ "水見示","1","1","2" },
 			//遊戲
-			new string[]{"4","3"},
+			new string[]{"3","1"},
 			//電影
 			new string[]{"1", "忠孝介","1" },
 			//時事
