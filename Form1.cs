@@ -13,8 +13,9 @@ namespace BibleQuiz
 	public partial class Form1 : Form
 	{
 		Button[] buttons = new Button[9];
-		int press;
+		int press, seconds;
 		Random r = new Random();
+		System.Media.SoundPlayer tick, beep;
 		string[][] question = new string[][]{
 			new string[]{ "成語「病入膏肓」當中的膏指的是心臟，而肓指的是？", "成語「直搗黃龍」中的「黃龍」指的是？", "明月幾時有？把酒問青天。是誰的詩詞？", "「唐詩三百首」是由哪個朝代的人所編輯的？", "何者不是4大名著之一？", "成語「東施效顰」中的「顰」是指哪一個動作？", "「人生以服務為目的」這句話是哪個偉人說的？", "「悄悄地揮一揮手，不帶走一片雲彩」的是詩人", "網路上流行的「囧」字，正確的意思是什麼？", "用來形容色彩鮮豔奪目的五彩繽紛，當中的「五彩」原本是指？", "「詩豪」意指何人？","六畜興旺中的「六畜」是指哪六種？","請問四書五經中的四書為何？", "「執子之手，與子偕老」的出處？", "「知天命」代指什麼年紀？","「東床快婿」原本是指誰","被稱為「書聖」的古代書法家為" },
 			new string[]{ "哥哥6歲時，妹妹的年齡是他的一半，請問哥哥50歲時妹妹幾歲？", "所謂的一刻鐘是指？", "六角柱比六角錐多幾個面？", "在數學上，幾個邊以上的平面圖形，都叫做「多邊形」？", "1KG的鐵塊跟1KG的羽毛何者比較重？", "自來水公司以「度」來計算水量，1度等於多少立方公尺的水？", "平行四邊形的每一個邊都可以叫做？", "在除法計算中，餘數一定大於除數？", "單車環島一週約1300公里 ，若每天騎6小時，每小時騎8公里，約幾天可以完成環島？", "有20隻雞跟兔子，只知道他們有54隻腳，請問雞跟兔各有幾隻？" },
@@ -195,11 +196,28 @@ namespace BibleQuiz
 			label_answer.Height = label_option.Height;
 			label_answer.Visible = false;
 			label_answer.Font = new Font("微軟正黑體", 30);
+			//timerButton
+			timerButton.Top = label_question.Bottom + 2;
+			timerButton.Left = label_question.Left;
+			timerButton.Height = label_option.Top - label_question.Bottom - 5;
+			timerButton.Width = label_question.Width / 3;
+			timerButton.Font = new Font("微軟正黑體", 35);
+			timerButton.Visible = false;
 			restCategory = question.GetLength(0);
 			question_index = Enumerable.Repeat(-1, question.GetLength(0)).ToArray();
 			button_category = Enumerable.Repeat(0, 9).ToArray();
 			button_index = Enumerable.Repeat(0, 9).ToArray();
+			//label_name
+			label_name.Top = timerButton.Top;
+			label_name.Left = timerButton.Width + spacing;
+			label_name.Width = this.Width - timerButton.Width - spacing * 2;
+			label_name.Height = timerButton.Height;
+			label_name.Font = new Font("微軟正黑體", 30);
+			label_name.Visible = false;
 			//nowused = Enumerable.Repeat(-1, question.GetLength(0)).ToArray();
+			//sound set
+			tick = new System.Media.SoundPlayer(Properties.Resources.tick);
+			beep = new System.Media.SoundPlayer(Properties.Resources.beep);
 			refill(-1);
 		}
 
@@ -220,6 +238,7 @@ namespace BibleQuiz
 			label_answer.BackColor = Color.FromArgb(40, r.Next(256), r.Next(256), r.Next(256));
 			label_option.BackColor = Color.FromArgb(100, r.Next(256), r.Next(256), r.Next(256));
 			nextButton.BackColor = Color.FromArgb(60, r.Next(256), r.Next(256), r.Next(256));
+			timerButton.BackColor = Color.FromArgb(60, r.Next(256), r.Next(256), r.Next(256));
 		}
 
 		private void refill(int press)
@@ -384,6 +403,16 @@ namespace BibleQuiz
 			label_question.Text = question[button_category[press]][button_index[press]];
 			label_option.Text = option[button_category[press]][button_index[press]];
 			label_option.TextAlign = ContentAlignment.MiddleCenter;
+			//timerSet
+			timerButton.Visible = true;
+			label_name.Visible = true;
+			seconds = 90;
+			timerButton.Text = "剩餘" + seconds + "秒";
+			timer1.Enabled = true;
+			timerButton.ForeColor = SystemColors.ControlText;
+			tick.PlayLooping();
+			//
+			label_name.Text = buttons[press].Text.Replace("\n", "   ");
 			setColor();
 		}
 
@@ -394,6 +423,8 @@ namespace BibleQuiz
 				label_answer.Text = answer[button_category[press]][button_index[press]];
 				label_answer.Visible = true;
 				label_option.TextAlign = ContentAlignment.MiddleLeft;
+				timer1.Enabled = false;
+				tick.Stop();
 				nextButton.Text = "返回";
 			}
 			else if (nextButton.Text == "返回")
@@ -414,8 +445,44 @@ namespace BibleQuiz
 				label_question.Visible = false;
 				label_answer.Visible = false;
 				nextButton.Visible = false;
+				timerButton.Visible = false;
+				label_name.Visible = false;
 				setColor();
 				refill(press);
+			}
+		}
+
+		private void timerButton_Click(object sender, EventArgs e)
+		{
+			if(nextButton.Text == "答案" && seconds>0)
+			{
+				timer1.Enabled = !timer1.Enabled;
+				if (timer1.Enabled)
+				{
+					tick.PlayLooping();
+				}
+				else
+				{
+					tick.Stop();
+				}
+			}
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			if (seconds > 0)
+			{
+				seconds--;
+				if (seconds == 0)
+				{
+					tick.Stop();
+					beep.Play();
+				}
+			}
+			timerButton.Text = "剩餘" + seconds + "秒";
+			if (seconds <= 10)
+			{
+				timerButton.ForeColor = Color.Red;
 			}
 		}
 
@@ -443,6 +510,15 @@ namespace BibleQuiz
 				label_answer.Top = label_option.Top;
 				label_answer.Width = label_option.Width / 2;
 				label_answer.Height = label_option.Height;
+				//timerButton
+				timerButton.Top = label_question.Bottom + 2;
+				timerButton.Left = label_question.Left;
+				timerButton.Height = label_option.Top - label_question.Bottom - 5;
+				timerButton.Width = label_question.Width / 3;
+				label_name.Top = timerButton.Top;
+				label_name.Left = timerButton.Width + spacing;
+				label_name.Width = this.Width - timerButton.Width - spacing * 2;
+				label_name.Height = timerButton.Height;
 			}
 		}
 	}

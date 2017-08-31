@@ -28,10 +28,14 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.label_option = new System.Windows.Forms.Label();
 			this.nextButton = new System.Windows.Forms.Button();
 			this.label_answer = new System.Windows.Forms.Label();
 			this.label_question = new System.Windows.Forms.Label();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.timerButton = new System.Windows.Forms.Button();
+			this.label_name = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// label_option
@@ -81,6 +85,30 @@
 			this.label_question.Text = "label1";
 			this.label_question.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
+			// timer1
+			// 
+			this.timer1.Interval = 1000;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			// 
+			// timerButton
+			// 
+			this.timerButton.Location = new System.Drawing.Point(13, 13);
+			this.timerButton.Name = "timerButton";
+			this.timerButton.Size = new System.Drawing.Size(75, 23);
+			this.timerButton.TabIndex = 4;
+			this.timerButton.Text = "button1";
+			this.timerButton.UseVisualStyleBackColor = true;
+			this.timerButton.Click += new System.EventHandler(this.timerButton_Click);
+			// 
+			// label_name
+			// 
+			this.label_name.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.label_name.Location = new System.Drawing.Point(94, 18);
+			this.label_name.Name = "label_name";
+			this.label_name.Size = new System.Drawing.Size(100, 23);
+			this.label_name.TabIndex = 5;
+			this.label_name.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -88,6 +116,8 @@
 			this.AutoScroll = true;
 			this.AutoSize = true;
 			this.ClientSize = new System.Drawing.Size(529, 334);
+			this.Controls.Add(this.label_name);
+			this.Controls.Add(this.timerButton);
 			this.Controls.Add(this.label_answer);
 			this.Controls.Add(this.nextButton);
 			this.Controls.Add(this.label_option);
@@ -107,6 +137,9 @@
 		private System.Windows.Forms.Button nextButton;
 		private System.Windows.Forms.Label label_answer;
 		private System.Windows.Forms.Label label_question;
+		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button timerButton;
+		private System.Windows.Forms.Label label_name;
 	}
 }
 
